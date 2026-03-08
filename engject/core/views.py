@@ -15,7 +15,6 @@ from django.contrib.auth.models import User
 load_dotenv()
 
 # ---------------- LOGIN ----------------
-
 def login_view(request):
 
     if request.method == "POST":
@@ -32,7 +31,6 @@ def login_view(request):
             messages.error(request, "Invalid username or password")
 
     return render(request, "login.html")
-
 
 # ---------------- HOME ----------------
 
