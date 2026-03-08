@@ -17,6 +17,7 @@ load_dotenv()
 # ---------------- LOGIN ----------------
 
 def login_view(request):
+
     if request.method == "POST":
 
         username = request.POST.get("username")
@@ -24,12 +25,11 @@ def login_view(request):
 
         user = authenticate(request, username=username, password=password)
 
-    if user is not None:
-        login(request, user)
-        return redirect("home")
-
-    else:
-        messages.error(request, "Invalid username or password")
+        if user is not None:
+            login(request, user)
+            return redirect("home")
+        else:
+            messages.error(request, "Invalid username or password")
 
     return render(request, "login.html")
 
