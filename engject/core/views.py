@@ -108,25 +108,26 @@ Your role: - Help engineering students understand technology trends.
 # ---------------- SIGNUP ----------------
 
 def signup_view(request):
+
     if request.method == "POST":
 
         username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-    if User.objects.filter(username=username).exists():
-        return render(request, "signup.html", {
-            "error": "Username already exists"
-        })
+        if User.objects.filter(username=username).exists():
+            return render(request, "signup.html", {
+                "error": "Username already exists"
+            })
 
-    user = User.objects.create_user(
-        username=username,
-        email=email,
-        password=password
-    )
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
 
-    user.save()
+        user.save()
 
-    return redirect("login")
+        return redirect("login")
 
     return render(request, "signup.html")
