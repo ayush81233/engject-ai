@@ -125,7 +125,11 @@ def signup_view(request):
             password=password
         )
 
+        user.save()
+
         return redirect("login")
+
+    return render(request, "signup.html")
 
     # GET request
     return render(request, "signup.html")
