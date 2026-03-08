@@ -110,7 +110,6 @@ Your role: - Help engineering students understand technology trends.
 def signup_view(request):
 
     if request.method == "POST":
-
         username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
@@ -126,8 +125,7 @@ def signup_view(request):
             password=password
         )
 
-        user.save()
-
         return redirect("login")
 
+    # GET request
     return render(request, "signup.html")
