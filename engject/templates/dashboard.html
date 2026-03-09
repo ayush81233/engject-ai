@@ -1,0 +1,317 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>EngJect AI</title>
+
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">
+⚙ EngJect AI
+</div>
+
+<div class="nav-center">
+<input type="text" placeholder="Search technologies or projects..." class="search-bar">
+</div>
+
+<div class="menu-icon" onclick="toggleMenu()">
+☰
+</div>
+
+</div>
+
+
+
+<!-- SIDEBAR -->
+
+<div id="sideMenu" class="side-menu">
+
+<span class="close-btn" onclick="toggleMenu()">✕</span>
+
+<a href="#">Home</a>
+<a href="#">Technologies</a>
+<a href="#">Trends</a>
+<a href="#">Evaluate Idea</a>
+
+</div>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="container">
+
+
+<!-- HERO -->
+
+<div class="hero">
+
+<h1>Discover Technology Trends</h1>
+
+<p>
+AI powered knowledge system that helps engineers discover trending technologies
+and global innovation trends.
+</p>
+
+</div>
+
+
+
+<!-- GLOBAL TECHNOLOGY TRENDS -->
+
+<h2 class="section-title">🌍 Global Technology Trends</h2>
+
+
+<div class="trend-grid">
+
+
+<div class="trend-card">
+
+<img src="https://images.unsplash.com/photo-1677442136019-21780ecad995" class="trend-img">
+
+<a href="/technology/AI Copilots/">
+<h3>AI Copilots</h3>
+</a>
+
+<p>AI copilots are transforming software development and productivity workflows.</p>
+
+</div>
+
+
+
+<div class="trend-card">
+
+<img src="https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b" class="trend-img">
+<a href="/technology/Autonomous Robotics/">
+<h3>Autonomous Robotics</h3>
+</a>
+
+<p>Robots are entering warehouses, logistics and industrial manufacturing.</p>
+
+</div>
+
+
+
+<div class="trend-card">
+
+<img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b" class="trend-img">
+<a href="/technology/AI Cybersecurity/">
+<h3>AI Cybersecurity</h3>
+</a>
+<p>Cybersecurity is shifting toward AI powered threat detection systems.</p>
+
+</div>
+
+
+</div>
+
+
+
+<!-- ENGINEERING PROBLEMS -->
+
+<h2 class="section-title">💡 Emerging Engineering Problems</h2>
+
+
+<div class="trend-grid">
+
+
+<div class="trend-card">
+
+<img src="https://images.unsplash.com/photo-1563986768609-322da13575f3" class="trend-img">
+
+<h3>AI Phishing Detection</h3>
+
+<p>Use machine learning to detect phishing emails and malicious websites.</p>
+
+</div>
+
+
+
+<div class="trend-card">
+
+<img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" class="trend-img">
+
+<h3>Smart Waste Management</h3>
+
+<p>IoT based waste monitoring systems for smart cities.</p>
+
+</div>
+
+
+
+<div class="trend-card">
+
+<img src="https://images.unsplash.com/photo-1639322537228-f710d846310a" class="trend-img">
+
+<h3>Blockchain Voting</h3>
+
+<p>Secure digital voting systems using blockchain technology.</p>
+
+</div>
+
+
+
+<div class="trend-card">
+
+<img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118" class="trend-img">
+
+<h3>AI Medical Diagnosis</h3>
+
+<p>Deep learning models assisting doctors in medical diagnosis.</p>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- AI BUTTON -->
+
+<div class="ai-button" onclick="toggleAI()">
+🤖
+</div>
+
+
+
+<!-- AI CHAT -->
+
+<div class="ai-chat" id="aiChat">
+
+<div class="ai-header">
+ProMentor AI
+<span onclick="toggleAI()">✖</span>
+</div>
+
+<div class="ai-messages">
+<p>Hello 👋 I am <b>ProMentor</b>. Ask me about technology trends or project ideas.</p>
+</div>
+
+<div class="ai-input">
+
+<input type="text" placeholder="Ask something..." id="aiInput" onkeydown="if(event.key==='Enter'){sendMessage()}">
+
+<button onclick="sendMessage()">Send</button>
+
+</div>
+
+</div>
+
+
+
+<!-- SIDEBAR SCRIPT -->
+
+<script>
+
+function toggleMenu(){
+
+let menu = document.getElementById("sideMenu");
+
+if(menu.style.right === "0px"){
+menu.style.right = "-260px";
+}else{
+menu.style.right = "0px";
+}
+
+}
+
+</script>
+
+
+
+<!-- AI OPEN / CLOSE -->
+
+<script>
+
+function toggleAI(){
+
+const chat = document.getElementById("aiChat");
+
+if(chat.style.display === "flex"){
+chat.style.display = "none";
+}else{
+chat.style.display = "flex";
+}
+
+}
+
+</script>
+
+
+
+<!-- SEND MESSAGE SCRIPT -->
+
+<script>
+
+async function sendMessage(){
+
+const input = document.getElementById("aiInput");
+const message = input.value.trim();
+
+if(message === "") return;
+
+const chatBox = document.querySelector(".ai-messages");
+
+/* show user message */
+
+chatBox.innerHTML += "<p><b>You:</b> " + message + "</p>";
+
+input.value = "";
+
+
+/* send message to Django backend */
+
+try{
+
+const response = await fetch("/promentor-ai/",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({
+message: message
+})
+
+});
+
+const data = await response.json();
+
+/* show AI reply */
+
+chatBox.innerHTML += "<p><b>ProMentor:</b> " + data.reply + "</p>";
+
+}catch(error){
+
+chatBox.innerHTML += "<p><b>ProMentor:</b> AI service not available.</p>";
+
+}
+
+/* scroll chat */
+
+chatBox.scrollTop = chatBox.scrollHeight;
+
+}
+
+</script>
+
+
+</body>
+</html>

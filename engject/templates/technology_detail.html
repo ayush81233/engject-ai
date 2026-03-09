@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>{{ tech.title }}</title>
+
+<style>
+
+body{
+    background:#0f172a;
+    color:white;
+    font-family:Arial;
+    margin:0;
+    padding:40px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+h1{
+    font-size:40px;
+}
+
+h2{
+    margin-top:40px;
+    color:#38bdf8;
+}
+
+p{
+    font-size:18px;
+    line-height:1.7;
+}
+
+img{
+    width:450px;
+    border-radius:10px;
+    margin:20px 0;
+}
+
+ul{
+    margin-top:10px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>{{ tech.title }}</h1>
+
+{% if tech.image %}
+<img src="{{ tech.image }}">
+{% endif %}
+
+<h2>Overview</h2>
+<p>{{ tech.overview }}</p>
+
+<h2>History</h2>
+<p>{{ tech.history }}</p>
+
+<h2>Applications</h2>
+<p>{{ tech.applications }}</p>
+
+<h2>Advantages</h2>
+<ul>
+{% for item in tech.advantages %}
+<li>{{ item }}</li>
+{% endfor %}
+</ul>
+
+<h2>Challenges</h2>
+<ul>
+{% for item in tech.challenges %}
+<li>{{ item }}</li>
+{% endfor %}
+</ul>
+
+<h2>Future Scope</h2>
+<p>{{ tech.future_scope }}</p>
+
+<h2>Research Papers</h2>
+
+{% for paper in tech.papers %}
+
+<p>
+<a href="{{ paper.link }}" target="_blank">
+{{ paper.title }}
+</a>
+</p>
+
+{% endfor %}
+
+<h2>Engineering Project Ideas</h2>
+
+<ul>
+{% for idea in tech.projects %}
+<li>{{ idea }}</li>
+{% endfor %}
+</ul>
+
+</div>
+
+</body>
+
+</html>
