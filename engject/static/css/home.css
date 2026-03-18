@@ -1,12 +1,44 @@
 /* =========================
-BODY
+GLOBAL BODY
 ========================= */
 
 body{
 margin:0;
-font-family:Arial, Helvetica, sans-serif;
+font-family:'Inter',Arial,Helvetica,sans-serif;
 background:linear-gradient(120deg,#0f172a,#1e293b,#111827);
 min-height:100vh;
+color:white;
+line-height:1.6;
+overflow-x:hidden;
+}
+
+
+/* =========================
+BACKGROUND GLOW EFFECT
+========================= */
+
+body::before{
+content:"";
+position:fixed;
+top:-200px;
+left:-200px;
+width:600px;
+height:600px;
+background:radial-gradient(circle, rgba(99,102,241,0.18), transparent 70%);
+filter:blur(40px);
+z-index:-1;
+}
+
+body::after{
+content:"";
+position:fixed;
+bottom:-200px;
+right:-200px;
+width:600px;
+height:600px;
+background:radial-gradient(circle, rgba(59,130,246,0.18), transparent 70%);
+filter:blur(40px);
+z-index:-1;
 }
 
 
@@ -19,42 +51,57 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 padding:18px 40px;
-background:#020617;
-color:white;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(14px);
+border-bottom:1px solid rgba(255,255,255,0.08);
+position:sticky;
+top:0;
+z-index:1000;
 }
 
 .logo{
-font-size:20px;
+font-size:22px;
 font-weight:600;
-color:white;
+letter-spacing:0.4px;
 }
 
 
 /* =========================
-LOGIN SIGNUP
+LOGIN SIGNUP BUTTONS
 ========================= */
 
 .auth-links{
 display:flex;
-gap:15px;
+gap:14px;
 }
 
 .auth-links a{
 text-decoration:none;
 color:white;
 font-size:14px;
+font-weight:500;
 }
 
 .login-btn{
-padding:7px 14px;
-border-radius:6px;
-border:1px solid rgba(255,255,255,0.3);
+padding:8px 16px;
+border-radius:8px;
+border:1px solid rgba(255,255,255,0.25);
+transition:0.2s;
+}
+
+.login-btn:hover{
+background:rgba(255,255,255,0.08);
 }
 
 .signup-btn{
-background:#6366f1;
-padding:7px 16px;
-border-radius:6px;
+background:linear-gradient(135deg,#6366f1,#4f46e5);
+padding:8px 18px;
+border-radius:8px;
+transition:0.2s;
+}
+
+.signup-btn:hover{
+background:linear-gradient(135deg,#4f46e5,#4338ca);
 }
 
 
@@ -64,29 +111,32 @@ CONTAINER
 
 .container{
 width:85%;
+max-width:1200px;
 margin:auto;
 padding-top:40px;
 }
 
 
 /* =========================
-HERO IMAGE
+HERO BANNER
 ========================= */
 
 .hero-banner{
 
-height:420px;
+height:440px;
 
 background-image:url("https://images.unsplash.com/photo-1518770660439-4636190af475");
 
 background-size:cover;
 background-position:center;
 
-border-radius:12px;
+border-radius:14px;
 
 display:flex;
 align-items:center;
 margin-top:30px;
+
+box-shadow:0 20px 60px rgba(0,0,0,0.4);
 }
 
 
@@ -96,13 +146,15 @@ margin-top:30px;
 
 background:rgba(0,0,0,0.55);
 
-padding:50px;
+padding:60px;
 
 width:100%;
 
-border-radius:12px;
+border-radius:14px;
 
 color:white;
+
+backdrop-filter:blur(6px);
 }
 
 
@@ -110,9 +162,9 @@ color:white;
 
 .hero-overlay h1{
 
-font-size:44px;
+font-size:46px;
 
-margin-bottom:10px;
+margin-bottom:12px;
 
 font-weight:700;
 }
@@ -121,9 +173,9 @@ font-weight:700;
 
 font-size:18px;
 
-max-width:600px;
+max-width:620px;
 
-margin-bottom:25px;
+margin-bottom:28px;
 
 color:#e5e7eb;
 }
@@ -135,7 +187,7 @@ color:#e5e7eb;
 
 display:inline-block;
 
-padding:12px 26px;
+padding:13px 28px;
 
 background:linear-gradient(135deg,#6366f1,#4f46e5);
 
@@ -146,11 +198,19 @@ text-decoration:none;
 border-radius:30px;
 
 font-weight:600;
+
+transition:all 0.25s;
+
+box-shadow:0 10px 25px rgba(0,0,0,0.35);
 }
 
 .hero-btn:hover{
 
+transform:translateY(-2px);
+
 background:linear-gradient(135deg,#4f46e5,#4338ca);
+
+box-shadow:0 14px 35px rgba(0,0,0,0.45);
 }
 
 
@@ -160,9 +220,14 @@ ABOUT SECTION
 
 .section{
 
-margin-top:50px;
+margin-top:60px;
 
 color:white;
+}
+
+.section h2{
+font-size:28px;
+margin-bottom:10px;
 }
 
 .section p{
@@ -170,4 +235,55 @@ color:white;
 color:#cbd5e1;
 
 max-width:800px;
+
+font-size:16px;
+}
+
+
+/* =========================
+RESPONSIVE DESIGN
+========================= */
+
+@media (max-width:900px){
+
+.hero-overlay{
+padding:40px;
+}
+
+.hero-overlay h1{
+font-size:34px;
+}
+
+.hero-overlay p{
+font-size:16px;
+}
+
+.container{
+width:92%;
+}
+
+}
+
+@media (max-width:600px){
+
+.navbar{
+padding:14px 20px;
+}
+
+.hero-banner{
+height:380px;
+}
+
+.hero-overlay{
+padding:30px;
+}
+
+.hero-overlay h1{
+font-size:28px;
+}
+
+.hero-overlay p{
+font-size:15px;
+}
+
 }

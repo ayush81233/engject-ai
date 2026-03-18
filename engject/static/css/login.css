@@ -1,117 +1,207 @@
-/* PAGE BACKGROUND */
+/* =========================
+GLOBAL PAGE
+========================= */
 
 body{
 margin:0;
-font-family:Arial, Helvetica, sans-serif;
+font-family:'Inter',Arial,Helvetica,sans-serif;
 
-background:linear-gradient(135deg,#0f172a,#1e293b);
+background:linear-gradient(135deg,#0f172a,#1e293b,#020617);
+
 height:100vh;
 
 display:flex;
 justify-content:center;
 align-items:center;
+
+color:white;
+overflow:hidden;
 }
 
 
-/* LOGIN CARD */
+/* =========================
+BACKGROUND GLOW EFFECT
+========================= */
+
+body::before{
+content:"";
+position:absolute;
+top:-200px;
+left:-200px;
+width:500px;
+height:500px;
+background:radial-gradient(circle, rgba(99,102,241,0.25), transparent 70%);
+filter:blur(40px);
+z-index:-1;
+}
+
+body::after{
+content:"";
+position:absolute;
+bottom:-200px;
+right:-200px;
+width:500px;
+height:500px;
+background:radial-gradient(circle, rgba(59,130,246,0.25), transparent 70%);
+filter:blur(40px);
+z-index:-1;
+}
+
+
+/* =========================
+LOGIN CARD
+========================= */
 
 .login-card{
 
-width:350px;
-padding:40px;
+width:360px;
+padding:45px;
 
 background:rgba(255,255,255,0.95);
 
-border-radius:12px;
+border-radius:14px;
 
-box-shadow:0 20px 40px rgba(0,0,0,0.4);
+box-shadow:0 25px 60px rgba(0,0,0,0.45);
 
 text-align:center;
+
+backdrop-filter:blur(6px);
 }
 
 
-/* TITLE */
+/* =========================
+TITLE
+========================= */
 
 .login-card h2{
 margin-bottom:30px;
 color:#111827;
+font-weight:600;
 }
 
 
-/* INPUTS */
+/* =========================
+INPUT FIELDS
+========================= */
 
 .login-card input{
 
 width:100%;
 
-padding:12px;
+padding:13px;
 
-margin-bottom:15px;
+margin-bottom:16px;
 
-border-radius:6px;
+border-radius:8px;
 
-border:1px solid #ccc;
+border:1px solid #d1d5db;
 
 font-size:14px;
 
 outline:none;
+
+transition:all 0.2s;
 }
 
 .login-card input:focus{
 
 border-color:#6366f1;
 
-box-shadow:0 0 4px rgba(99,102,241,0.5);
+box-shadow:0 0 0 3px rgba(99,102,241,0.25);
 }
 
 
-/* BUTTON */
+/* =========================
+BUTTON
+========================= */
 
 .login-card button{
 
 width:100%;
 
-padding:12px;
+padding:13px;
 
-background:#4f46e5;
+background:linear-gradient(135deg,#6366f1,#4f46e5);
 
 color:white;
 
 border:none;
 
-border-radius:6px;
+border-radius:8px;
 
 font-size:15px;
 
 cursor:pointer;
 
-transition:0.3s;
+transition:all 0.25s;
+
+box-shadow:0 6px 15px rgba(0,0,0,0.2);
 }
 
 .login-card button:hover{
 
-background:#4338ca;
+background:linear-gradient(135deg,#4f46e5,#4338ca);
 
-transform:translateY(-1px);
+transform:translateY(-2px);
+
+box-shadow:0 10px 25px rgba(0,0,0,0.35);
 }
 
 
-/* SIGNUP LINK */
+/* =========================
+SIGNUP LINK
+========================= */
 
 .signup-link{
 
 display:block;
 
-margin-top:18px;
+margin-top:20px;
 
 text-decoration:none;
 
-color:#6366f1;
+color:#4f46e5;
 
 font-weight:500;
+
+transition:0.2s;
 }
 
 .signup-link:hover{
 
 text-decoration:underline;
+}
+
+
+/* =========================
+ERROR MESSAGE
+========================= */
+
+.error-message{
+
+background:#fee2e2;
+
+color:#b91c1c;
+
+padding:10px;
+
+border-radius:6px;
+
+font-size:13px;
+
+margin-bottom:15px;
+}
+
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media (max-width:480px){
+
+.login-card{
+width:90%;
+padding:35px;
+}
+
 }

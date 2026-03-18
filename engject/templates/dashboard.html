@@ -1,11 +1,13 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html>
 
 <head>
-<title>EngJect AI</title>
 
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<title>EngJect It</title>
+
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=2">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -13,46 +15,64 @@
 
 <body>
 
-
 <!-- NAVBAR -->
 
 <div class="navbar">
 
-<div class="logo">
-⚙ EngJect AI
-</div>
+    <div class="logo">
+        ⚙ EngJect It
+    </div>
 
-<div class="nav-center">
-<input type="text" placeholder="Search technologies or projects..." class="search-bar">
-</div>
+    <div class="nav-center">
+        <input 
+        type="text"
+        id="searchInput"
+        placeholder="Search technologies or projects..."
+        class="search-bar"
+        >
+    </div>
 
-<div class="menu-icon" onclick="toggleMenu()">
-☰
-</div>
+    <!-- ✅ ONLY ONE MENU ICON -->
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
 
 </div>
-
 
 
 <!-- SIDEBAR -->
 
 <div id="sideMenu" class="side-menu">
 
-<span class="close-btn" onclick="toggleMenu()">✕</span>
+    <div class="side-header">
+        ⚙ EngJect
+        <span class="close-btn" onclick="toggleMenu()">✕</span>
+    </div>
 
-<a href="#">Home</a>
-<a href="#">Technologies</a>
-<a href="#">Trends</a>
-<a href="#">Evaluate Idea</a>
+    <a href="/dashboard/">
+        <span>🏠</span> Home
+    </a>
+
+    <a href="/technologies/">
+        <span>🧠</span> Technologies
+    </a>
+
+    <a href="/trends/">
+        <span>📈</span> Trends
+    </a>
+
+    <a href="/idea-evaluator/">
+        <span>💡</span> Evaluate Idea
+    </a>
+
+    <a href="/logout/">
+        <span>🚪</span> Logout
+    </a>
 
 </div>
-
 
 
 <!-- MAIN CONTENT -->
 
 <div class="container">
-
 
 <!-- HERO -->
 
@@ -68,64 +88,53 @@ and global innovation trends.
 </div>
 
 
+<!-- SEARCH RESULTS -->
+
+<div id="searchResults" class="trend-grid" style="margin-bottom:40px;"></div>
+
 
 <!-- GLOBAL TECHNOLOGY TRENDS -->
 
 <h2 class="section-title">🌍 Global Technology Trends</h2>
 
+<div class="tech-grid">
 
-<div class="trend-grid">
+{% if tech_data %}
 
+{% for tech in tech_data %}
 
-<div class="trend-card">
+<div class="card">
 
-<img src="https://images.unsplash.com/photo-1677442136019-21780ecad995" class="trend-img">
+<img src="{{ tech.image }}" class="tech-img">
 
-<a href="/technology/AI Copilots/">
-<h3>AI Copilots</h3>
+<h3>
+<a href="/technology/{{ tech.title }}">
+{{ tech.title }}
 </a>
+</h3>
 
-<p>AI copilots are transforming software development and productivity workflows.</p>
-
-</div>
-
-
-
-<div class="trend-card">
-
-<img src="https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b" class="trend-img">
-<a href="/technology/Autonomous Robotics/">
-<h3>Autonomous Robotics</h3>
-</a>
-
-<p>Robots are entering warehouses, logistics and industrial manufacturing.</p>
+<p>
+{{ tech.description|truncatewords:22 }}
+</p>
 
 </div>
 
+{% endfor %}
 
+{% else %}
 
-<div class="trend-card">
+<p style="color:white;">No technologies available.</p>
 
-<img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b" class="trend-img">
-<a href="/technology/AI Cybersecurity/">
-<h3>AI Cybersecurity</h3>
-</a>
-<p>Cybersecurity is shifting toward AI powered threat detection systems.</p>
+{% endif %}
 
 </div>
-
-
-</div>
-
 
 
 <!-- ENGINEERING PROBLEMS -->
 
 <h2 class="section-title">💡 Emerging Engineering Problems</h2>
 
-
 <div class="trend-grid">
-
 
 <div class="trend-card">
 
@@ -137,8 +146,6 @@ and global innovation trends.
 
 </div>
 
-
-
 <div class="trend-card">
 
 <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" class="trend-img">
@@ -148,8 +155,6 @@ and global innovation trends.
 <p>IoT based waste monitoring systems for smart cities.</p>
 
 </div>
-
-
 
 <div class="trend-card">
 
@@ -161,8 +166,6 @@ and global innovation trends.
 
 </div>
 
-
-
 <div class="trend-card">
 
 <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118" class="trend-img">
@@ -173,20 +176,14 @@ and global innovation trends.
 
 </div>
 
-
 </div>
 
-
 </div>
-
 
 
 <!-- AI BUTTON -->
 
-<div class="ai-button" onclick="toggleAI()">
-🤖
-</div>
-
+<div class="ai-button" onclick="toggleAI()">🤖</div>
 
 
 <!-- AI CHAT -->
@@ -198,13 +195,20 @@ ProMentor AI
 <span onclick="toggleAI()">✖</span>
 </div>
 
-<div class="ai-messages">
+<div class="ai-messages" id="aiMessages">
+
 <p>Hello 👋 I am <b>ProMentor</b>. Ask me about technology trends or project ideas.</p>
+
 </div>
 
 <div class="ai-input">
 
-<input type="text" placeholder="Ask something..." id="aiInput" onkeydown="if(event.key==='Enter'){sendMessage()}">
+<input 
+type="text"
+placeholder="Ask something..."
+id="aiInput"
+onkeydown="if(event.key==='Enter'){sendMessage()}"
+>
 
 <button onclick="sendMessage()">Send</button>
 
@@ -213,17 +217,16 @@ ProMentor AI
 </div>
 
 
-
-<!-- SIDEBAR SCRIPT -->
+<!-- ================= JS ================= -->
 
 <script>
 
 function toggleMenu(){
 
-let menu = document.getElementById("sideMenu");
+const menu = document.getElementById("sideMenu");
 
 if(menu.style.right === "0px"){
-menu.style.right = "-260px";
+menu.style.right = "-280px";
 }else{
 menu.style.right = "0px";
 }
@@ -232,9 +235,6 @@ menu.style.right = "0px";
 
 </script>
 
-
-
-<!-- AI OPEN / CLOSE -->
 
 <script>
 
@@ -253,28 +253,139 @@ chat.style.display = "flex";
 </script>
 
 
+<script>
 
-<!-- SEND MESSAGE SCRIPT -->
+document.getElementById("searchInput").addEventListener("keypress", function(event) {
+
+if(event.key === "Enter"){
+runSearch();
+}
+
+});
+
+</script>
+
+
+<script>
+
+function getCSRFToken() {
+
+let cookieValue = null;
+
+if (document.cookie && document.cookie !== "") {
+
+const cookies = document.cookie.split(";");
+
+for (let i = 0; i < cookies.length; i++) {
+
+const cookie = cookies[i].trim();
+
+if (cookie.substring(0, 10) === "csrftoken=") {
+
+cookieValue = decodeURIComponent(cookie.substring(10));
+
+break;
+
+}
+
+}
+
+}
+
+return cookieValue;
+
+}
+
+
+async function runSearch(){
+
+const query = document.getElementById("searchInput").value.trim();
+
+if(!query){
+alert("Enter something to search");
+return;
+}
+
+const container = document.getElementById("searchResults");
+
+container.innerHTML = "<p>Searching...</p>";
+
+try{
+
+const response = await fetch("/api/search/",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json",
+"X-CSRFToken": getCSRFToken()
+},
+
+body: JSON.stringify({
+query: query
+})
+
+});
+
+const data = await response.json();
+
+container.innerHTML = "";
+
+if(data.results && data.results.length > 0){
+
+data.results.forEach(result => {
+
+container.innerHTML += `
+
+<div class="trend-card">
+
+<h3>
+<a href="/technology/${encodeURIComponent(result.title)}">
+${result.title}
+</a>
+</h3>
+
+<p>${result.description || result.snippet}</p>
+
+</div>
+
+`;
+
+});
+
+}else{
+
+container.innerHTML = "<p>No results found.</p>";
+
+}
+
+}catch(error){
+
+console.error(error);
+
+container.innerHTML = "<p style='color:red;'>Search failed</p>";
+
+}
+
+}
+
+</script>
+
 
 <script>
 
 async function sendMessage(){
 
 const input = document.getElementById("aiInput");
-const message = input.value.trim();
+const messages = document.querySelector(".ai-messages");
 
-if(message === "") return;
+const text = input.value.trim();
 
-const chatBox = document.querySelector(".ai-messages");
+if(!text) return;
 
-/* show user message */
-
-chatBox.innerHTML += "<p><b>You:</b> " + message + "</p>";
+messages.innerHTML += `<p><b>You:</b> ${text}</p>`;
 
 input.value = "";
-
-
-/* send message to Django backend */
 
 try{
 
@@ -287,31 +398,26 @@ headers:{
 },
 
 body: JSON.stringify({
-message: message
+message: text
 })
 
 });
 
 const data = await response.json();
 
-/* show AI reply */
+messages.innerHTML += `<p><b>ProMentor:</b> ${data.reply}</p>`;
 
-chatBox.innerHTML += "<p><b>ProMentor:</b> " + data.reply + "</p>";
+messages.scrollTop = messages.scrollHeight;
 
-}catch(error){
+}catch(err){
 
-chatBox.innerHTML += "<p><b>ProMentor:</b> AI service not available.</p>";
+messages.innerHTML += `<p style="color:red;">AI failed to respond.</p>`;
 
 }
-
-/* scroll chat */
-
-chatBox.scrollTop = chatBox.scrollHeight;
 
 }
 
 </script>
-
 
 </body>
 </html>

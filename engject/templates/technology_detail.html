@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>{{ tech.title }}</title>
 
 <style>
@@ -9,7 +13,7 @@
 body{
     background:#0f172a;
     color:white;
-    font-family:Arial;
+    font-family:Arial, sans-serif;
     margin:0;
     padding:40px;
 }
@@ -34,17 +38,28 @@ p{
 }
 
 img{
-    width:450px;
+    width:100%;
+    max-width:500px;
     border-radius:10px;
     margin:20px 0;
 }
 
 ul{
     margin-top:10px;
+    padding-left:20px;
 }
 
 li{
     margin-bottom:8px;
+}
+
+a{
+    color:#38bdf8;
+    text-decoration:none;
+}
+
+a:hover{
+    text-decoration:underline;
 }
 
 </style>
@@ -58,35 +73,58 @@ li{
 <h1>{{ tech.title }}</h1>
 
 {% if tech.image %}
-<img src="{{ tech.image }}">
+<img src="{{ tech.image }}" alt="{{ tech.title }}">
 {% endif %}
 
+{% if tech.overview %}
 <h2>Overview</h2>
 <p>{{ tech.overview }}</p>
+{% endif %}
 
+
+{% if tech.history %}
 <h2>History</h2>
 <p>{{ tech.history }}</p>
+{% endif %}
 
+
+{% if tech.applications %}
 <h2>Applications</h2>
 <p>{{ tech.applications }}</p>
+{% endif %}
 
+
+{% if tech.advantages %}
 <h2>Advantages</h2>
+
 <ul>
 {% for item in tech.advantages %}
 <li>{{ item }}</li>
 {% endfor %}
 </ul>
 
+{% endif %}
+
+
+{% if tech.challenges %}
 <h2>Challenges</h2>
+
 <ul>
 {% for item in tech.challenges %}
 <li>{{ item }}</li>
 {% endfor %}
 </ul>
 
+{% endif %}
+
+
+{% if tech.future_scope %}
 <h2>Future Scope</h2>
 <p>{{ tech.future_scope }}</p>
+{% endif %}
 
+
+{% if tech.papers %}
 <h2>Research Papers</h2>
 
 {% for paper in tech.papers %}
@@ -99,15 +137,60 @@ li{
 
 {% endfor %}
 
+{% endif %}
+
+
+{% if tech.projects %}
 <h2>Engineering Project Ideas</h2>
 
 <ul>
+
 {% for idea in tech.projects %}
 <li>{{ idea }}</li>
 {% endfor %}
+
 </ul>
 
+{% endif %}
+
 </div>
+<h2>Sources</h2>
+
+{% for s in tech.sources %}
+
+<p>
+<a href="{{ s.link }}" target="_blank">
+{{ s.title }}
+</a>
+</p>
+
+{% endfor %}
+
+<h2>Current Global Situation</h2>
+
+{% if tech.current_situation %}
+
+{% for news in tech.current_situation %}
+
+<div style="margin-bottom:15px">
+
+<strong>{{ news.title }}</strong>
+
+<p>{{ news.description }}</p>
+
+<a href="{{ news.link }}" target="_blank">
+Source: {{ news.source }}
+</a>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<p>No recent developments found.</p>
+
+{% endif %}
 
 </body>
 
