@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Project News | EngJect It</title>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=11">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="side-menu" style="display:flex;right:auto;left:0;box-shadow: 2px 0 10px rgba(0,0,0,0.5);">
+    <div class="side-header">⚙ EngJect</div>
+    <a href="/dashboard/">🏠 Home</a>
+    <a href="/trends/">📈 Trends</a>
+    <a href="/project-news/" class="active">📰 Project News</a>
+    <a href="/projects/">💻 Projects</a>
+    <a href="/promentor-ai/">🤖 PromMentor AI</a>
+    <a href="/logout/">🚪 Logout</a>
+</div>
+
+<div class="container" style="margin-left: 280px; width: calc(100% - 300px);">
+    <h1>📰 Latest Project News</h1>
+    <div id="newsContainer" class="projects-container"></div>
+</div>
+
+<script>
+async function loadNews(){
+    const container = document.getElementById("newsContainer");
+    container.innerHTML = "<p class='loading'>Loading latest project news...</p>";
+    try{
+        const res = await fetch("/api/search/web/", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({query: "latest open source engineering project news"})
+        });
+        const data = await res.json();
+        container.innerHTML = "";
+        const results = data.results;
+        if(results && results.length){
+            results.forEach(item => {
+                container.innerHTML += `
+                <div class="project-card">
+                    <h3><a href="${item.link}" target="_blank" style="color:white;text-decoration:none;">${item.title}</a></h3>
+                    <p class="desc">${item.description || "No description available"}</p>
+                    <div class="meta">🌐 ${item.source}</div>
+                    <a href="${item.link}" target="_blank" class="view-btn">Read Article →</a>
+                </div>`;
+            });
+        } else {
+            container.innerHTML = "<p class='empty-state'>No news found.</p>";
+        }
+    } catch(e){
+        container.innerHTML = "<p style='color:red;'>Failed to load news</p>";
+    }
+}
+loadNews();
+</script>
+</body>
+</html>

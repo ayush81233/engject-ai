@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html>
 
@@ -7,8 +6,7 @@
 
 <title>EngJect It</title>
 
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=2">
-
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=10">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
@@ -16,30 +14,25 @@
 <body>
 
 <!-- NAVBAR -->
-
 <div class="navbar">
 
-    <div class="logo">
-        ⚙ EngJect It
-    </div>
+    <div class="logo">⚙ EngJect It</div>
 
     <div class="nav-center">
         <input 
         type="text"
         id="searchInput"
-        placeholder="Search technologies or projects..."
+        placeholder="Search technologies..."
         class="search-bar"
         >
     </div>
 
-    <!-- ✅ ONLY ONE MENU ICON -->
     <div class="menu-icon" onclick="toggleMenu()">☰</div>
 
 </div>
 
 
 <!-- SIDEBAR -->
-
 <div id="sideMenu" class="side-menu">
 
     <div class="side-header">
@@ -47,171 +40,38 @@
         <span class="close-btn" onclick="toggleMenu()">✕</span>
     </div>
 
-    <a href="/dashboard/">
-        <span>🏠</span> Home
-    </a>
-
-    <a href="/technologies/">
-        <span>🧠</span> Technologies
-    </a>
-
-    <a href="/trends/">
-        <span>📈</span> Trends
-    </a>
-
-    <a href="/idea-evaluator/">
-        <span>💡</span> Evaluate Idea
-    </a>
-
-    <a href="/logout/">
-        <span>🚪</span> Logout
-    </a>
+    <a href="/dashboard/" class="active">🏠 Home</a>
+    <a href="/trends/">📈 Trends</a>
+    <a href="/project-news/">📰 Project News</a>
+    <a href="/projects/">💻 Projects</a>
+    <a href="/promentor-ai/">🤖 PromMentor AI</a> <!-- 🔥 NEW -->
+    <a href="/logout/">🚪 Logout</a>
 
 </div>
 
 
-<!-- MAIN CONTENT -->
-
+<!-- MAIN -->
 <div class="container">
 
-<!-- HERO -->
-
 <div class="hero">
-
 <h1>Discover Technology Trends</h1>
+<p>AI powered system to explore technologies and innovations.</p>
 
-<p>
-AI powered knowledge system that helps engineers discover trending technologies
-and global innovation trends.
-</p>
 
 </div>
-
 
 <!-- SEARCH RESULTS -->
+<div id="searchResults" style="margin-bottom:40px; background: rgba(30,41,59,0.6); padding: 0; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06); display: none;"></div>
 
-<div id="searchResults" class="trend-grid" style="margin-bottom:40px;"></div>
-
-
-<!-- GLOBAL TECHNOLOGY TRENDS -->
-
-<h2 class="section-title">🌍 Global Technology Trends</h2>
-
-<div class="tech-grid">
-
-{% if tech_data %}
-
-{% for tech in tech_data %}
-
-<div class="card">
-
-<img src="{{ tech.image }}" class="tech-img">
-
-<h3>
-<a href="/technology/{{ tech.title }}">
-{{ tech.title }}
-</a>
-</h3>
-
-<p>
-{{ tech.description|truncatewords:22 }}
-</p>
-
+<!-- DYNAMIC NEWS & PROBLEMS -->
+<h2 class="section-title">📰 Latest Domain News</h2>
+<div id="dashboardNews" class="projects-container">
+    <p class="loading">Loading breaking news...</p>
 </div>
 
-{% endfor %}
-
-{% else %}
-
-<p style="color:white;">No technologies available.</p>
-
-{% endif %}
-
-</div>
-
-
-<!-- ENGINEERING PROBLEMS -->
-
-<h2 class="section-title">💡 Emerging Engineering Problems</h2>
-
-<div class="trend-grid">
-
-<div class="trend-card">
-
-<img src="https://images.unsplash.com/photo-1563986768609-322da13575f3" class="trend-img">
-
-<h3>AI Phishing Detection</h3>
-
-<p>Use machine learning to detect phishing emails and malicious websites.</p>
-
-</div>
-
-<div class="trend-card">
-
-<img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" class="trend-img">
-
-<h3>Smart Waste Management</h3>
-
-<p>IoT based waste monitoring systems for smart cities.</p>
-
-</div>
-
-<div class="trend-card">
-
-<img src="https://images.unsplash.com/photo-1639322537228-f710d846310a" class="trend-img">
-
-<h3>Blockchain Voting</h3>
-
-<p>Secure digital voting systems using blockchain technology.</p>
-
-</div>
-
-<div class="trend-card">
-
-<img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118" class="trend-img">
-
-<h3>AI Medical Diagnosis</h3>
-
-<p>Deep learning models assisting doctors in medical diagnosis.</p>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- AI BUTTON -->
-
-<div class="ai-button" onclick="toggleAI()">🤖</div>
-
-
-<!-- AI CHAT -->
-
-<div class="ai-chat" id="aiChat">
-
-<div class="ai-header">
-ProMentor AI
-<span onclick="toggleAI()">✖</span>
-</div>
-
-<div class="ai-messages" id="aiMessages">
-
-<p>Hello 👋 I am <b>ProMentor</b>. Ask me about technology trends or project ideas.</p>
-
-</div>
-
-<div class="ai-input">
-
-<input 
-type="text"
-placeholder="Ask something..."
-id="aiInput"
-onkeydown="if(event.key==='Enter'){sendMessage()}"
->
-
-<button onclick="sendMessage()">Send</button>
-
+<h2 class="section-title" style="margin-top: 50px;">🧨 Current Tech Problems to Solve</h2>
+<div id="dashboardProblems" class="tech-grid">
+    <p class="loading">AI is gathering top engineering problems...</p>
 </div>
 
 </div>
@@ -221,203 +81,180 @@ onkeydown="if(event.key==='Enter'){sendMessage()}"
 
 <script>
 
-function toggleMenu(){
-
-const menu = document.getElementById("sideMenu");
-
-if(menu.style.right === "0px"){
-menu.style.right = "-280px";
-}else{
-menu.style.right = "0px";
-}
-
-}
-
-</script>
-
-
-<script>
-
-function toggleAI(){
-
-const chat = document.getElementById("aiChat");
-
-if(chat.style.display === "flex"){
-chat.style.display = "none";
-}else{
-chat.style.display = "flex";
-}
-
-}
-
-</script>
-
-
-<script>
-
-document.getElementById("searchInput").addEventListener("keypress", function(event) {
-
-if(event.key === "Enter"){
-runSearch();
-}
-
+// ENTER KEY SEARCH
+document.getElementById("searchInput").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        runSearch();
+    }
 });
 
-</script>
+// CSRF
+function getCSRFToken(){
+    let cookieValue = null;
+    const cookies = document.cookie.split(";");
 
-
-<script>
-
-function getCSRFToken() {
-
-let cookieValue = null;
-
-if (document.cookie && document.cookie !== "") {
-
-const cookies = document.cookie.split(";");
-
-for (let i = 0; i < cookies.length; i++) {
-
-const cookie = cookies[i].trim();
-
-if (cookie.substring(0, 10) === "csrftoken=") {
-
-cookieValue = decodeURIComponent(cookie.substring(10));
-
-break;
-
-}
-
-}
-
-}
-
-return cookieValue;
-
+    for(let i=0;i<cookies.length;i++){
+        const cookie = cookies[i].trim();
+        if(cookie.startsWith("csrftoken=")){
+            cookieValue = decodeURIComponent(cookie.substring(10));
+        }
+    }
+    return cookieValue;
 }
 
 
+// 🔥 FINAL SEARCH FUNCTION (FIXED + AI INCLUDED)
 async function runSearch(){
 
-const query = document.getElementById("searchInput").value.trim();
+    const query = document.getElementById("searchInput").value.trim();
 
-if(!query){
-alert("Enter something to search");
-return;
+    if(!query){
+        alert("Enter something to search");
+        return;
+    }
+
+    const container = document.getElementById("searchResults");
+    container.style.display = "block";
+    container.style.padding = "30px";
+    container.innerHTML = "<p class='loading'>Searching the web and consulting AI...</p>";
+
+    try{
+
+        const response = await fetch("/api/search/", {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                "X-CSRFToken": getCSRFToken()
+            },
+            body: JSON.stringify({
+                query: query
+            })
+        });
+
+        const data = await response.json();
+        const tech = data.data;
+
+        container.innerHTML = "";
+
+        if(!tech){
+            container.innerHTML = "<p class='empty-state'>No data found.</p>";
+            return;
+        }
+
+        // TITLE & OVERVIEW
+        container.innerHTML += `<h2 style="color:orange; font-size: 32px; margin-top:0;">${tech.title}</h2>`;
+        if(tech.overview){
+            container.innerHTML += `<p style="color:#cbd5e1; font-size:16px;">${tech.overview}</p>`;
+        }
+
+        // APPLICATIONS
+        if(tech.applications){
+            container.innerHTML += `<h3 style="margin-top:25px; color:#38bdf8;">⚙ Applications</h3><p style="color:#94a3b8;">${tech.applications}</p>`;
+        }
+
+        // NEWS
+        if(tech.current_situation && tech.current_situation.length){
+            let newsHTML = `<h3 style="margin-top:30px; color:#38bdf8;">📰 Latest News</h3><div class="trend-grid">`;
+            tech.current_situation.forEach(n => {
+                newsHTML += `
+                <div class="trend-card">
+                    <h3 style="font-size:16px;">${n.title}</h3>
+                    <p>${n.description || ""}</p>
+                    <a href="${n.link}" target="_blank" style="color:orange; text-decoration:none; font-weight:600; font-size:14px;">
+                        Read more →
+                    </a>
+                </div>
+                `;
+            });
+            newsHTML += `</div>`;
+            container.innerHTML += newsHTML;
+        } else {
+            container.innerHTML += "<p style='color:#94a3b8;'>No recent news found.</p>";
+        }
+
+        // 🔥 AI IDEAS
+        if(data.ai && data.ai.length){
+            let aiHTML = `<h3 style="margin-top:40px; color:#38bdf8;">🤖 AI Project Ideas</h3><div class="ai-ideas" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);"><ul style="margin:0; padding-left:20px;">`;
+            data.ai.forEach(i=>{
+                aiHTML += `<li style="margin-bottom:12px; line-height:1.5;">${i}</li>`;
+            });
+            aiHTML += `</ul></div>`;
+            container.innerHTML += aiHTML;
+        }
+
+    } catch(error){
+
+        console.error(error);
+        container.innerHTML = "<p style='color:red;'>Search failed</p>";
+
+    }
 }
 
-const container = document.getElementById("searchResults");
 
-container.innerHTML = "<p>Searching...</p>";
+// SIDEBAR
+function toggleMenu(){
+    const menu = document.getElementById("sideMenu");
+    menu.style.right = (menu.style.right === "0px") ? "-280px" : "0px";
+}
 
-try{
+// LOAD DASHBOARD DATA DYNAMICALLY
+async function loadDashboardData() {
+    // Load News
+    const newsContainer = document.getElementById("dashboardNews");
+    try {
+        const res = await fetch("/api/search/web/", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({query: "technology news"})
+        });
+        const data = await res.json();
+        newsContainer.innerHTML = "";
+        if(data.results && data.results.length) {
+            data.results.slice(0, 6).forEach(item => {
+                newsContainer.innerHTML += `
+                <div class="project-card">
+                    <h3><a href="${item.link}" target="_blank" style="color:white;text-decoration:none;">${item.title}</a></h3>
+                    <p class="desc">${item.description || "No description available"}</p>
+                    <div class="meta" style="margin-bottom:0;">🌐 ${item.source}</div>
+                </div>`;
+            });
+        }
+    } catch(e) {
+        newsContainer.innerHTML = "<p style='color:red;'>Failed to load news</p>";
+    }
 
-const response = await fetch("/api/search/",{
+    // Load Problems
+    const probContainer = document.getElementById("dashboardProblems");
+    try {
+        const res = await fetch("/api/search/ai/", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({query: "current major real-world unresolved engineering tech problems"})
+        });
+        const data = await res.json();
+        probContainer.innerHTML = "";
+        if(data.results && data.results.length) {
+            data.results.forEach(prob => {
+                probContainer.innerHTML += `
+                <div class="card" style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2);">
+                    <h3 style="color: #ef4444; margin-top:0;">🚨 Open Problem</h3>
+                    <p style="color: #e2e8f0; font-size: 15px; margin-bottom:0;">${prob}</p>
+                </div>`;
+            });
+        }
+    } catch(e) {
+        probContainer.innerHTML = "<p style='color:red;'>Failed to load problems</p>";
+    }
+}
 
-method:"POST",
+// Automatically load on start
+loadDashboardData();
 
-headers:{
-"Content-Type":"application/json",
-"X-CSRFToken": getCSRFToken()
-},
-
-body: JSON.stringify({
-query: query
-})
-
-});
-
-const data = await response.json();
-
-container.innerHTML = "";
-
-if(data.results && data.results.length > 0){
-
-data.results.forEach(result => {
-
-container.innerHTML += `
-
-<div class="trend-card">
-
-<h3>
-<a href="/technology/${encodeURIComponent(result.title)}">
-${result.title}
+</script>
+<!-- 🔥 FLOATING AI BUTTON -->
+<a href="/promentor-ai/" class="floating-ai-btn">
+    🤖
 </a>
-</h3>
-
-<p>${result.description || result.snippet}</p>
-
-</div>
-
-`;
-
-});
-
-}else{
-
-container.innerHTML = "<p>No results found.</p>";
-
-}
-
-}catch(error){
-
-console.error(error);
-
-container.innerHTML = "<p style='color:red;'>Search failed</p>";
-
-}
-
-}
-
-</script>
-
-
-<script>
-
-async function sendMessage(){
-
-const input = document.getElementById("aiInput");
-const messages = document.querySelector(".ai-messages");
-
-const text = input.value.trim();
-
-if(!text) return;
-
-messages.innerHTML += `<p><b>You:</b> ${text}</p>`;
-
-input.value = "";
-
-try{
-
-const response = await fetch("/promentor-ai/",{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body: JSON.stringify({
-message: text
-})
-
-});
-
-const data = await response.json();
-
-messages.innerHTML += `<p><b>ProMentor:</b> ${data.reply}</p>`;
-
-messages.scrollTop = messages.scrollHeight;
-
-}catch(err){
-
-messages.innerHTML += `<p style="color:red;">AI failed to respond.</p>`;
-
-}
-
-}
-
-</script>
 
 </body>
 </html>

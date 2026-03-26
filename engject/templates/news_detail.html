@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>{{ data.title }} | EngJect It</title>
+
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=10">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- TITLE -->
+<h1>{{ data.title }}</h1>
+
+<!-- IMAGE -->
+{% if data.image %}
+<img src="{{ data.image }}" style="width:100%; border-radius:12px; margin-bottom:20px;">
+{% endif %}
+
+<!-- OVERVIEW -->
+<div class="card">
+    <h2>📘 Overview</h2>
+    <p>{{ data.overview }}</p>
+</div>
+
+<!-- APPLICATIONS -->
+{% if data.applications %}
+<div class="card">
+    <h2>⚙ Applications</h2>
+    <p>{{ data.applications }}</p>
+</div>
+{% endif %}
+
+<!-- ADVANTAGES -->
+{% if data.advantages %}
+<div class="card">
+    <h2>✅ Advantages</h2>
+    <ul>
+        {% for item in data.advantages %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- CHALLENGES -->
+{% if data.challenges %}
+<div class="card">
+    <h2>⚠ Challenges</h2>
+    <ul>
+        {% for item in data.challenges %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- FUTURE -->
+{% if data.future_scope %}
+<div class="card">
+    <h2>🚀 Future Scope</h2>
+    <ul>
+        {% for item in data.future_scope %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+
+<!-- 🔥 AI PROJECT IDEAS -->
+{% if data.projects %}
+<div class="card">
+    <h2>🤖 AI Project Ideas</h2>
+    <ul>
+        {% for idea in data.projects %}
+        <li>{{ idea }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+
+<!-- 📄 RESEARCH PAPERS -->
+{% if data.papers %}
+<div class="card">
+    <h2>📄 Research Papers</h2>
+    {% for paper in data.papers %}
+    <p>
+        <a href="{{ paper.link }}" target="_blank">
+            {{ paper.title }}
+        </a>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+<!-- 🌐 SOURCES -->
+{% if data.sources %}
+<div class="card">
+    <h2>🌐 Sources</h2>
+    {% for s in data.sources %}
+    <p>
+        <a href="{{ s.link }}" target="_blank">
+            {{ s.title }}
+        </a>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+<!-- 📰 CURRENT NEWS -->
+{% if data.current_situation %}
+<div class="card">
+    <h2>📰 Latest News</h2>
+
+    {% for news in data.current_situation %}
+    <div style="margin-bottom:15px;">
+        <strong>{{ news.title }}</strong>
+        <p style="font-size:14px;">{{ news.description }}</p>
+        <a href="{{ news.link }}" target="_blank">Read more →</a>
+    </div>
+    {% endfor %}
+
+</div>
+{% endif %}
+
+</div>
+
+</body>
+</html>

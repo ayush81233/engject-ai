@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>{{ repo.name }} | EngJect It</title>
+
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=10">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- 🔥 PROJECT HEADER -->
+<div class="card">
+
+    <h1>{{ repo.name }}</h1>
+
+    <p style="color:#94a3b8;">
+        {{ repo.description|default:"No description available" }}
+    </p>
+
+    <!-- META -->
+    <div class="meta" style="margin-top:10px;">
+        ⭐ {{ repo.stars }} &nbsp; | &nbsp;
+        🍴 {{ repo.forks }} &nbsp; | &nbsp;
+        💻 {{ repo.language|default:"N/A" }}
+    </div>
+
+    <!-- OWNER -->
+    <div style="display:flex;align-items:center;gap:10px;margin-top:15px;">
+        <img src="{{ repo.avatar }}" width="40" style="border-radius:50%;">
+        <span>{{ repo.owner }}</span>
+    </div>
+
+    <!-- BUTTONS -->
+    <div style="margin-top:20px;">
+        <a href="{{ repo.url }}" target="_blank" class="view-btn">
+            🔗 View on GitHub
+        </a>
+
+        <a href="/projects/github/" style="margin-left:10px;" class="btn-secondary">
+            ← Back
+        </a>
+    </div>
+
+</div>
+
+
+<!-- 📄 README -->
+<div class="card" style="margin-top:30px;">
+
+    <h2>📄 README</h2>
+
+    <pre style="
+        white-space:pre-wrap;
+        color:#cbd5e1;
+        font-size:13px;
+        line-height:1.5;
+        margin-top:15px;
+    ">
+{{ repo.readme }}
+    </pre>
+
+</div>
+
+
+<!-- 🔥 FUTURE SECTION (OPTIONAL READY) -->
+<!--
+<div class="card" style="margin-top:30px;">
+    <h2>🔍 Related Projects</h2>
+    <p>Coming soon...</p>
+</div>
+-->
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Trending Domains | EngJect It</title>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=11">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="side-menu" style="display:flex;right:auto;left:0;box-shadow: 2px 0 10px rgba(0,0,0,0.5);">
+    <div class="side-header">⚙ EngJect</div>
+    <a href="/dashboard/">🏠 Home</a>
+    <a href="/trends/" class="active">📈 Trends</a>
+    <a href="/project-news/">📰 Project News</a>
+    <a href="/projects/">💻 Projects</a>
+    <a href="/promentor-ai/">🤖 PromMentor AI</a>
+    <a href="/logout/">🚪 Logout</a>
+</div>
+
+<div class="container" style="margin-left: 280px; width: calc(100% - 300px);">
+    <h1>📈 Trending Domains</h1>
+    <p style="color:#94a3b8; margin-bottom:20px;">Click on a domain to discover its latest technological advancements and trends.</p>
+    
+    <div class="platform-selector" style="justify-content:flex-start; margin-bottom:30px;">
+        <button class="platform-btn active" onclick="loadDomain('Artificial Intelligence', this)">AI</button>
+        <button class="platform-btn" onclick="loadDomain('Cybersecurity', this)">Cybersecurity</button>
+        <button class="platform-btn" onclick="loadDomain('Blockchain', this)">Blockchain</button>
+        <button class="platform-btn" onclick="loadDomain('Quantum Computing', this)">Quantum Computing</button>
+        <button class="platform-btn" onclick="loadDomain('Cloud Computing', this)">Cloud Computing</button>
+        <button class="platform-btn" onclick="loadDomain('Internet of Things', this)">IoT</button>
+        <button class="platform-btn" onclick="loadDomain('Biotechnology', this)">Biotech</button>
+    </div>
+
+    <h2 id="currentDomainTitle" style="color:#38bdf8;">Latest in Artificial Intelligence</h2>
+    <div id="trendsContainer" class="projects-container"></div>
+</div>
+
+<script>
+async function loadDomain(domain, btn){
+    // Update active button
+    document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+
+    document.getElementById("currentDomainTitle").innerText = "Latest in " + domain;
+
+    const container = document.getElementById("trendsContainer");
+    container.innerHTML = "<p class='loading'>Loading breaking " + domain + " trends...</p>";
+    
+    try{
+        const res = await fetch("/api/search/web/", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({query: domain + " technology trends"})
+        });
+        const data = await res.json();
+        container.innerHTML = "";
+        const results = data.results;
+        
+        if(results && results.length){
+            results.forEach(item => {
+                container.innerHTML += `
+                <div class="project-card">
+                    <h3><a href="${item.link}" target="_blank" style="color:white;text-decoration:none;">${item.title}</a></h3>
+                    <p class="desc">${item.description || "No description available"}</p>
+                    <div class="meta">🌐 ${item.source}</div>
+                    <a href="${item.link}" target="_blank" class="view-btn">Read Article →</a>
+                </div>`;
+            });
+        } else {
+            container.innerHTML = "<p class='empty-state'>No trends found.</p>";
+        }
+    } catch(e){
+        container.innerHTML = "<p style='color:red;'>Failed to load trends</p>";
+    }
+}
+
+// LOAD AI ON PAGE START
+loadDomain('Artificial Intelligence', document.querySelector('.platform-btn'));
+</script>
+</body>
+</html>

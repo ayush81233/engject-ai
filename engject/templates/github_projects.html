@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>GitHub Projects</title>
+
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=10">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<a href="/projects/" style="color:var(--accent);text-decoration:none;font-weight:600;display:inline-block;margin-bottom:10px;">← Back to Projects Hub</a>
+<h1>🚀 GitHub Projects</h1>
+
+<!-- SEARCH -->
+<div class="controls">
+    <input 
+        type="text" 
+        id="searchInput"
+        value="{{ query }}"
+        placeholder="Search GitHub projects..."
+        onkeydown="if(event.key==='Enter'){runSearch()}"
+    >
+</div>
+
+
+<!-- RESULTS -->
+<div class="projects-container" id="projects-container">
+
+{% for repo in repos %}
+<div class="project-card">
+
+    <h3>{{ repo.name }}</h3>
+
+    <p class="desc">
+        {{ repo.description|default:"No description available" }}
+    </p>
+
+    <div class="meta">
+        ⭐ {{ repo.stars }} • {{ repo.language|default:"N/A" }}
+    </div>
+
+    <a href="{{ repo.url }}" target="_blank" class="view-btn">
+        View Project →
+    </a>
+
+</div>
+{% endfor %}
+
+</div>
+
+</div>
+
+
+<!-- ================= JS ================= -->
+
+<script>
+
+async function runSearch(){
+
+    const query = document.getElementById("searchInput").value.trim();
+
+    if(!query){
+        alert("Enter something to search");
+        return;
+    }
+
+    const container = document.getElementById("projects-container");
+
+    container.innerHTML = "<p>Searching...</p>";
+
+    try{
+
+        const response = await fetch("/api/search/github/", {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                query: query
+            })
+        });
+
+        const data = await response.json();
+
+        container.innerHTML = "";
+
+        if(data.results && data.results.length){
+
+            data.results.forEach(repo => {
+
+                container.innerHTML += `
+                <div class="project-card">
+                    <h3>${repo.name}</h3>
+
+                    <p class="desc">
+                        ${repo.description || "No description available"}
+                    </p>
+
+                    <div class="meta">
+                        ⭐ ${repo.stars} • ${repo.language || "N/A"}
+                    </div>
+
+                    <a href="${repo.url}" target="_blank" class="view-btn">
+                        View Project →
+                    </a>
+                </div>
+                `;
+            });
+
+        } else {
+
+            container.innerHTML = "<p>No projects found.</p>";
+
+        }
+
+    }catch(err){
+
+        container.innerHTML = "<p style='color:red;'>Search failed</p>";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

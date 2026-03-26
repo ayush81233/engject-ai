@@ -1,68 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
+<title>{{ tech.title }} | EngJect It</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>{{ tech.title }}</title>
-
-<style>
-
-body{
-    background:#0f172a;
-    color:white;
-    font-family:Arial, sans-serif;
-    margin:0;
-    padding:40px;
-}
-
-.container{
-    max-width:1000px;
-    margin:auto;
-}
-
-h1{
-    font-size:40px;
-}
-
-h2{
-    margin-top:40px;
-    color:#38bdf8;
-}
-
-p{
-    font-size:18px;
-    line-height:1.7;
-}
-
-img{
-    width:100%;
-    max-width:500px;
-    border-radius:10px;
-    margin:20px 0;
-}
-
-ul{
-    margin-top:10px;
-    padding-left:20px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-a{
-    color:#38bdf8;
-    text-decoration:none;
-}
-
-a:hover{
-    text-decoration:underline;
-}
-
-</style>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=10">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
 
@@ -70,121 +14,142 @@ a:hover{
 
 <div class="container">
 
-<h1>{{ tech.title }}</h1>
+<!-- TITLE -->
+<div class="card">
+    <h1>{{ tech.title }}</h1>
 
-{% if tech.image %}
-<img src="{{ tech.image }}" alt="{{ tech.title }}">
-{% endif %}
+    {% if tech.image %}
+    <img src="{{ tech.image }}" class="tech-img">
+    {% endif %}
 
-{% if tech.overview %}
-<h2>Overview</h2>
-<p>{{ tech.overview }}</p>
-{% endif %}
-
-
-{% if tech.history %}
-<h2>History</h2>
-<p>{{ tech.history }}</p>
-{% endif %}
-
-
-{% if tech.applications %}
-<h2>Applications</h2>
-<p>{{ tech.applications }}</p>
-{% endif %}
-
-
-{% if tech.advantages %}
-<h2>Advantages</h2>
-
-<ul>
-{% for item in tech.advantages %}
-<li>{{ item }}</li>
-{% endfor %}
-</ul>
-
-{% endif %}
-
-
-{% if tech.challenges %}
-<h2>Challenges</h2>
-
-<ul>
-{% for item in tech.challenges %}
-<li>{{ item }}</li>
-{% endfor %}
-</ul>
-
-{% endif %}
-
-
-{% if tech.future_scope %}
-<h2>Future Scope</h2>
-<p>{{ tech.future_scope }}</p>
-{% endif %}
-
-
-{% if tech.papers %}
-<h2>Research Papers</h2>
-
-{% for paper in tech.papers %}
-
-<p>
-<a href="{{ paper.link }}" target="_blank">
-{{ paper.title }}
-</a>
-</p>
-
-{% endfor %}
-
-{% endif %}
-
-
-{% if tech.projects %}
-<h2>Engineering Project Ideas</h2>
-
-<ul>
-
-{% for idea in tech.projects %}
-<li>{{ idea }}</li>
-{% endfor %}
-
-</ul>
-
-{% endif %}
-
+    {% if tech.overview %}
+    <p>{{ tech.overview }}</p>
+    {% endif %}
 </div>
-<h2>Sources</h2>
 
-{% for s in tech.sources %}
 
-<p>
-<a href="{{ s.link }}" target="_blank">
-{{ s.title }}
-</a>
-</p>
+<!-- HISTORY -->
+{% if tech.history %}
+<div class="card">
+    <h2>📜 History</h2>
+    <p>{{ tech.history }}</p>
+</div>
+{% endif %}
 
-{% endfor %}
 
-<h2>Current Global Situation</h2>
+<!-- APPLICATIONS -->
+{% if tech.applications %}
+<div class="card">
+    <h2>⚙ Applications</h2>
+    <p>{{ tech.applications }}</p>
+</div>
+{% endif %}
+
+
+<!-- ADVANTAGES -->
+{% if tech.advantages %}
+<div class="card">
+    <h2>✅ Advantages</h2>
+    <ul>
+        {% for item in tech.advantages %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+
+<!-- CHALLENGES -->
+{% if tech.challenges %}
+<div class="card">
+    <h2>⚠ Challenges</h2>
+    <ul>
+        {% for item in tech.challenges %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+
+<!-- FUTURE -->
+{% if tech.future_scope %}
+<div class="card">
+    <h2>🚀 Future Scope</h2>
+    <ul>
+        {% for item in tech.future_scope %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+
+<!-- 🔥 AI PROJECT IDEAS -->
+{% if tech.projects %}
+<div class="card">
+    <h2>🤖 Engineering Project Ideas</h2>
+    <ul>
+        {% for idea in tech.projects %}
+        <li>{{ idea }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+
+<!-- 📄 RESEARCH -->
+{% if tech.papers %}
+<div class="card">
+    <h2>📄 Research Papers</h2>
+    {% for paper in tech.papers %}
+    <p>
+        <a href="{{ paper.link }}" target="_blank">
+            {{ paper.title }}
+        </a>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+<!-- 🌐 SOURCES -->
+{% if tech.sources %}
+<div class="card">
+    <h2>🌐 Sources</h2>
+    {% for s in tech.sources %}
+    <p>
+        <a href="{{ s.link }}" target="_blank">
+            {{ s.title }}
+        </a>
+    </p>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+<!-- 📰 CURRENT SITUATION -->
+<div class="card">
+
+<h2>📰 Current Global Situation</h2>
 
 {% if tech.current_situation %}
 
-{% for news in tech.current_situation %}
+    {% for news in tech.current_situation %}
+    <div style="margin-bottom:15px">
 
-<div style="margin-bottom:15px">
+        <strong>{{ news.title }}</strong>
 
-<strong>{{ news.title }}</strong>
+        <p style="font-size:14px;color:#94a3b8;">
+            {{ news.description }}
+        </p>
 
-<p>{{ news.description }}</p>
+        <a href="{{ news.link }}" target="_blank">
+            Source: {{ news.source }}
+        </a>
 
-<a href="{{ news.link }}" target="_blank">
-Source: {{ news.source }}
-</a>
-
-</div>
-
-{% endfor %}
+    </div>
+    {% endfor %}
 
 {% else %}
 
@@ -192,6 +157,9 @@ Source: {{ news.source }}
 
 {% endif %}
 
-</body>
+</div>
 
+</div>
+
+</body>
 </html>

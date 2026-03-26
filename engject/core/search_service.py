@@ -2,6 +2,7 @@ import os
 import requests
 from dotenv import load_dotenv
 from duckduckgo_search import DDGS
+from concurrent.futures import ThreadPoolExecutor
 
 load_dotenv()
 
@@ -11,7 +12,10 @@ load_dotenv()
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
-BRAVE_API_KEY = os.getenv("BRAVE_API_KEY")
+
+COMMON_HEADERS = {
+    "User-Agent": "EngJect-It-App"
+}
 
 
 # =========================================
@@ -24,7 +28,6 @@ def google_search(query):
         return []
 
     try:
-
         url = "https://www.googleapis.com/customsearch/v1"
 
         params = {
@@ -37,7 +40,6 @@ def google_search(query):
         response = requests.get(url, params=params, timeout=8)
 
         if response.status_code != 200:
-            print("Google API error:", response.text)
             return []
 
         data = response.json()
@@ -47,10 +49,8 @@ def google_search(query):
         for item in data.get("items", []):
 
             image = None
-
             if "pagemap" in item:
                 images = item["pagemap"].get("cse_image")
-
                 if images:
                     image = images[0].get("src")
 
@@ -58,65 +58,14 @@ def google_search(query):
                 "title": item.get("title"),
                 "description": item.get("snippet"),
                 "link": item.get("link"),
-                "image": image
+                "image": image,
+                "source": "Google"
             })
 
         return results
 
     except Exception as e:
-
         print("Google search failed:", e)
-
-        return []
-
-
-# =========================================
-# BRAVE SEARCH
-# =========================================
-
-def brave_search(query):
-
-    if not BRAVE_API_KEY:
-        return []
-
-    try:
-
-        url = "https://api.search.brave.com/res/v1/web/search"
-
-        headers = {
-            "Accept": "application/json",
-            "X-Subscription-Token": BRAVE_API_KEY
-        }
-
-        params = {
-            "q": query,
-            "count": 5
-        }
-
-        response = requests.get(url, headers=headers, params=params, timeout=8)
-
-        if response.status_code != 200:
-            return []
-
-        data = response.json()
-
-        results = []
-
-        for item in data.get("web", {}).get("results", []):
-
-            results.append({
-                "title": item.get("title"),
-                "description": item.get("description"),
-                "link": item.get("url"),
-                "image": None
-            })
-
-        return results
-
-    except Exception as e:
-
-        print("Brave search failed:", e)
-
         return []
 
 
@@ -127,62 +76,82 @@ def brave_search(query):
 def duckduckgo_search(query):
 
     try:
-
         results = []
 
         with DDGS() as ddgs:
-
             search_results = ddgs.text(query, max_results=5)
 
             for r in search_results:
-
                 results.append({
                     "title": r.get("title"),
                     "description": r.get("body"),
                     "link": r.get("href"),
-                    "image": None
+                    "image": None,
+                    "source": "DuckDuckGo"
                 })
 
         return results
 
     except Exception as e:
-
         print("DuckDuckGo search failed:", e)
-
         return []
 
 
 # =========================================
-# HYBRID SEARCH ENGINE
+# PROJECT-FOCUSED QUERY BUILDER 🔥
 # =========================================
 
-def hybrid_search(query):
+def build_project_query(query):
+    return f"{query} engineering project OR final year project OR github OR implementation"
 
-    results = []
 
-    try:
-        google_results = google_search(query)
-        if google_results:
-            results.extend(google_results)
-    except:
-        pass
+# =========================================
+# REMOVE DUPLICATES (IMPROVED)
+# =========================================
 
-    try:
-        duck_results = duckduckgo_search(query)
-        if duck_results:
-            results.extend(duck_results)
-    except:
-        pass
-
-    # remove duplicates
-    seen = set()
+def deduplicate(results):
+    seen_links = set()
     unique_results = []
 
     for r in results:
-        if r["title"] not in seen:
-            seen.add(r["title"])
+        link = r.get("link")
+
+        if link and link not in seen_links:
+            seen_links.add(link)
             unique_results.append(r)
 
+    return unique_results
+
+
+# =========================================
+# HYBRID SEARCH ENGINE (PARALLEL ⚡)
+# =========================================
+
+def hybrid_search(query, project_mode=True):
+
+    final_query = build_project_query(query) if project_mode else query
+
+    results = []
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        futures = [
+            executor.submit(google_search, final_query),
+            executor.submit(duckduckgo_search, final_query)
+        ]
+
+        for future in futures:
+            try:
+                data = future.result()
+                if data:
+                    results.extend(data)
+            except:
+                pass
+
+    # remove duplicates
+    unique_results = deduplicate(results)
+
     return {
-        "results": unique_results[:8]
+        "query": query,
+        "total_results": len(unique_results),
+        "results": unique_results[:10]
     }

@@ -5,9 +5,13 @@ from groq import Groq
 
 load_dotenv()
 
+HEADERS = {
+    "User-Agent": "EngjectAI/1.0"
+}
+
 
 # =========================================
-# AI PROJECT IDEAS GENERATOR
+# AI PROJECT IDEAS GENERATOR (IMPROVED)
 # =========================================
 
 def generate_project_ideas(topic):
@@ -18,48 +22,47 @@ def generate_project_ideas(topic):
         return []
 
     try:
-
         client = Groq(api_key=api_key)
 
         prompt = f"""
 Generate 5 innovative engineering project ideas related to {topic}.
-Keep each idea short (1 sentence).
-Focus on real engineering systems or prototypes.
+Each idea should be:
+- 1 line
+- Practical & buildable
+- Unique (not generic)
+
+Return only bullet points.
 """
 
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7
         )
 
         text = response.choices[0].message.content
 
         ideas = [
-            line.strip("-• ")
+            line.strip("-• ").strip()
             for line in text.split("\n")
-            if line.strip()
+            if len(line.strip()) > 10
         ]
 
         return ideas[:5]
 
     except Exception as e:
-
         print("AI project idea generation failed:", e)
-
         return []
 
 
 # =========================================
-# GOOGLE SOURCES
+# GOOGLE SOURCES (IMPROVED)
 # =========================================
 
 def get_sources(topic):
 
     try:
-
-        url = f"https://www.googleapis.com/customsearch/v1"
+        url = "https://www.googleapis.com/customsearch/v1"
 
         params = {
             "key": os.getenv("GOOGLE_API_KEY"),
@@ -81,25 +84,22 @@ def get_sources(topic):
 
             sources.append({
                 "title": item.get("title"),
-                "link": item.get("link")
+                "link": item.get("link"),
+                "source": "Google"
             })
 
         return sources
 
-    except Exception:
-
+    except Exception as e:
+        print("Source fetch failed:", e)
         return []
 
 
 # =========================================
-# WIKIPEDIA TECHNOLOGY INFO
+# WIKIPEDIA TECHNOLOGY INFO (UPGRADED)
 # =========================================
 
 def get_technology_info(topic):
-
-    headers = {
-        "User-Agent": "EngjectAI/1.0"
-    }
 
     try:
 
@@ -108,7 +108,6 @@ def get_technology_info(topic):
         # -----------------------------
         # FIND PAGE
         # -----------------------------
-
         search_params = {
             "action": "query",
             "list": "search",
@@ -119,7 +118,7 @@ def get_technology_info(topic):
         response = requests.get(
             search_url,
             params=search_params,
-            headers=headers,
+            headers=HEADERS,
             timeout=8
         )
 
@@ -133,7 +132,6 @@ def get_technology_info(topic):
         # -----------------------------
         # FETCH CONTENT
         # -----------------------------
-
         content_params = {
             "action": "query",
             "prop": "extracts|pageimages",
@@ -146,12 +144,11 @@ def get_technology_info(topic):
         content_response = requests.get(
             search_url,
             params=content_params,
-            headers=headers,
+            headers=HEADERS,
             timeout=8
         )
 
         content_data = content_response.json()
-
         pages = content_data["query"]["pages"]
         page = list(pages.values())[0]
 
@@ -160,21 +157,20 @@ def get_technology_info(topic):
         paragraphs = [
             p.strip()
             for p in text.split("\n")
-            if len(p.strip()) > 60
+            if len(p.strip()) > 80
         ]
 
+        # safer extraction
         overview = paragraphs[0] if len(paragraphs) > 0 else ""
-        history = paragraphs[1] if len(paragraphs) > 1 else ""
-        applications = paragraphs[2] if len(paragraphs) > 2 else ""
+        applications = paragraphs[1] if len(paragraphs) > 1 else ""
 
-        advantages = paragraphs[3:6] if len(paragraphs) > 5 else []
-        challenges = paragraphs[6:9] if len(paragraphs) > 8 else []
-        future_scope = paragraphs[9:12] if len(paragraphs) > 11 else []
+        advantages = paragraphs[2:5] if len(paragraphs) > 4 else []
+        challenges = paragraphs[5:8] if len(paragraphs) > 7 else []
+        future_scope = paragraphs[8:11] if len(paragraphs) > 10 else []
 
         # -----------------------------
         # IMAGE
         # -----------------------------
-
         image = page.get("thumbnail", {}).get("source")
 
         if not image:
@@ -183,56 +179,55 @@ def get_technology_info(topic):
         # -----------------------------
         # RESEARCH PAPERS
         # -----------------------------
-
-        papers = [
-            {
-                "title": f"Research papers about {page_title}",
-                "link": f"https://arxiv.org/search/?query={page_title}&searchtype=all"
-            }
-        ]
+        papers = [{
+            "title": f"Research papers about {page_title}",
+            "link": f"https://arxiv.org/search/?query={page_title}&searchtype=all"
+        }]
 
         # -----------------------------
         # AI PROJECT IDEAS
         # -----------------------------
-
         projects = generate_project_ideas(page_title)
 
         # -----------------------------
         # SOURCES
         # -----------------------------
-
         sources = get_sources(page_title)
 
         # -----------------------------
-        # FINAL DATA
+        # CURRENT SITUATION (NEWS)
         # -----------------------------
         current_situation = get_current_situation(page_title)
 
+        # -----------------------------
+        # FINAL RESPONSE
+        # -----------------------------
         return {
-    "title": page_title,
-    "image": image,
-    "overview": overview,
-    "history": history,
-    "applications": applications,
-    "advantages": advantages,
-    "challenges": challenges,
-    "future_scope": future_scope,
-    "papers": papers,
-    "projects": projects,
-    "sources": sources,
-    "current_situation": current_situation
-}
+            "title": page_title,
+            "image": image,
+            "overview": overview,
+            "applications": applications,
+            "advantages": advantages,
+            "challenges": challenges,
+            "future_scope": future_scope,
+            "papers": papers,
+            "projects": projects,
+            "sources": sources,
+            "current_situation": current_situation
+        }
 
     except Exception as e:
-
         print("Wikipedia fetch failed:", e)
-
         return None
+
+
+# =========================================
+# CURRENT SITUATION (NEWS API)
+# =========================================
 
 def get_current_situation(topic):
 
     try:
-
         url = "https://newsapi.org/v2/everything"
 
         params = {
@@ -255,13 +250,14 @@ def get_current_situation(topic):
         for article in data.get("articles", []):
 
             news.append({
-                "title": article["title"],
-                "description": article["description"],
-                "link": article["url"],
-                "source": article["source"]["name"]
+                "title": article.get("title"),
+                "description": article.get("description"),
+                "link": article.get("url"),
+                "source": article.get("source", {}).get("name")
             })
 
         return news
 
-    except Exception:
+    except Exception as e:
+        print("News fetch failed:", e)
         return []

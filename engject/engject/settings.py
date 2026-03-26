@@ -164,8 +164,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
 
-BRAVE_API_KEY = os.getenv("BRAVE_API_KEY")
-
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")

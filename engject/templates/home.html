@@ -3,14 +3,12 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>EngJect It : Engineers Project It</title>
+<title>EngJect It</title>
 
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
-
+<link rel="stylesheet" href="{% static 'css/home.css' %}?v=4">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
@@ -18,12 +16,9 @@
 <body>
 
 <!-- NAVBAR -->
-
 <header class="navbar">
 
-    <div class="logo">
-        ⚙ EngJect It
-    </div>
+    <div class="logo">⚙ EngJect It</div>
 
     <nav class="auth-links">
         <a href="/login/" class="login-btn">Login</a>
@@ -33,45 +28,69 @@
 </header>
 
 
-<!-- HERO SECTION -->
+<!-- HERO -->
+<section class="hero">
 
-<main class="container">
+    <div class="badge">🚀 AI-Powered Engineering Platform</div>
 
-<section class="hero-banner">
+    <h1>
+        Build <span>Next-Gen</span><br>
+        Engineering Projects
+    </h1>
 
-<div class="hero-overlay">
+    <p class="description">
+        Discover real-world problems, explore projects,
+        and generate AI-powered ideas — all in one place.
+    </p>
 
-<h1>EngJect It : Engineers Project It</h1>
+    <div class="buttons">
+        <a href="/dashboard/" class="btn-primary">
+            Explore Dashboard →
+        </a>
+    </div>
 
-<p>
-Discover innovative engineering project ideas powered by global
-technology trends, AI insights and modern innovations.
-</p>
+</section>
 
-<a href="/dashboard/" class="hero-btn">
-Explore Projects →
-</a>
+
+<!-- FEATURES -->
+<section class="section">
+
+<h2>Explore Multiple Sources</h2>
+
+<div class="projects-container">
+
+    <div class="card">
+        <h3>💻 GitHub Projects</h3>
+        <p>Explore real-world open-source engineering projects.</p>
+    </div>
+
+    <div class="card">
+        <h3>🌐 Web Insights</h3>
+        <p>Discover latest trends and implementations.</p>
+    </div>
+
+    <div class="card">
+        <h3>🤖 AI Ideas</h3>
+        <p>Generate innovative project ideas instantly.</p>
+    </div>
 
 </div>
 
 </section>
 
 
-<!-- ABOUT SECTION -->
-
+<!-- ABOUT -->
 <section class="section">
 
-<h2>About EngJect It</h2>
+<h2>Why EngJect It?</h2>
 
 <p>
-Engineering students often struggle to find unique project ideas.
-EngJect It analyzes modern technology trends and emerging problems
-to help engineers build innovative and impactful projects.
+Stop copying outdated projects. Build what actually matters.
+EngJect It connects trends, projects, and AI intelligence
+to help engineers innovate smarter.
 </p>
 
 </section>
-
-</main>
 
 </body>
 </html>

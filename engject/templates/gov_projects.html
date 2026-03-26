@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ source }} Projects</title>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=11">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Accordion Styles */
+.project-card {
+    cursor: pointer;
+}
+.details-panel {
+    display: none;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    text-align: left;
+}
+.details-panel.open {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<a href="/projects/" style="color:#94a3b8; text-decoration:none;">← Back to Projects Hub</a>
+<h1 style="margin-top:20px; font-size:40px;">{% if source == 'SIH' %}🏆 Smart India Hackathon{% else %}🔬 KSCST Projects{% endif %}</h1>
+
+<div class="hero" style="background: rgba(30,41,59,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 30px; margin-top:20px;">
+    <h2 style="margin-top:0;">Search Problem Statements</h2>
+    <p style="color:#94a3b8; font-size:15px; margin-bottom:20px;">Search {{ source }} historical problem domains. Projects will populate below showing exactly how students conceptually solved them.</p>
+
+    <div style="display:flex; gap:15px;">
+        <input type="text" id="domainInput" placeholder="e.g., Waste Management, AI in Healthcare, Smart Education..." style="width:100%; max-width:500px; padding:12px; border-radius:8px; border:none; background:#1e293b; color:white;">
+        <button onclick="searchGov()" class="view-btn" style="border:none; cursor:pointer;">Search {{ source }}</button>
+    </div>
+</div>
+
+<div id="resultsGrid" class="projects-container">
+    <!-- Results populated here -->
+</div>
+
+</div>
+
+<script>
+async function searchGov(){
+    const q = document.getElementById("domainInput").value.trim();
+    if(!q) return;
+
+    const grid = document.getElementById("resultsGrid");
+    grid.innerHTML = "<p class='loading'>Analyzing {{ source }} records via AI...</p>";
+
+    try {
+        const res = await fetch("/api/search/gov/", {
+            method:"POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({query: q, source: "{{ source }}"})
+        });
+        const data = await res.json();
+        
+        grid.innerHTML = "";
+        
+        if(!data.results || data.results.length === 0){
+            grid.innerHTML = "<p class='empty-state'>No matching records parsed.</p>";
+            return;
+        }
+
+        data.results.forEach((p, idx) => {
+            const cardId = "details-" + idx;
+            grid.innerHTML += `
+            <div class="project-card" onclick="toggleDetails('${cardId}')">
+                <h3 style="color:var(--text-main); font-size:18px;">${p.title}</h3>
+                
+                <!-- Expanded details (Hidden by default) -->
+                <div id="${cardId}" class="details-panel">
+                    <h4 style="color:#ef4444; margin-bottom:5px;">🚨 Problem Statement</h4>
+                    <p style="color:#e2e8f0; font-size:14px; margin-bottom:15px;">${p.problem_statement}</p>
+                    
+                    <h4 style="color:#38bdf8; margin-bottom:5px;">💡 Project Overview</h4>
+                    <p style="color:#cbd5e1; font-size:14px; margin-bottom:20px;">${p.overview}</p>
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; color:#64748b; background:rgba(255,255,255,0.05); padding:4px 8px; border-radius:4px;">Official Source: ${p.source}</span>
+                        <a href="${p.link}" target="_blank" onclick="event.stopPropagation()" class="view-btn">View External Portal →</a>
+                    </div>
+                </div>
+                
+                <p style="font-size:13px; color:#94a3b8; margin-top:10px; text-align:center;">Click to Expand Details ↓</p>
+            </div>
+            `;
+        });
+
+    } catch(e) {
+        grid.innerHTML = "<p style='color:red;'>Search request failed.</p>";
+    }
+}
+
+function toggleDetails(id){
+    const el = document.getElementById(id);
+    if(el.classList.contains("open")){
+        el.classList.remove("open");
+    } else {
+        // close all others first (optional accordion behavior)
+        document.querySelectorAll('.details-panel').forEach(p => p.classList.remove('open'));
+        el.classList.add("open");
+    }
+}
+
+// Enter key support
+document.getElementById("domainInput").addEventListener("keypress", function(e){
+    if(e.key === "Enter") searchGov();
+});
+</script>
+
+</body>
+</html>
